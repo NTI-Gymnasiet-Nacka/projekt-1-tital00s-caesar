@@ -17,4 +17,9 @@ class InvalidUsernameError():
         self.username = username 
         super().__init__(self.username) 
         
+class BookAlredyLondError():
+    def __init__ (self,alredy_lond):
+        self.alredy_lond = alredy_lond
+        super().__init__(self.alredy_lond)
+        
 
