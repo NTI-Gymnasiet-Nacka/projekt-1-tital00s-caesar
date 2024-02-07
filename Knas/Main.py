@@ -1,7 +1,139 @@
 import csv
-from tkinter import Tk
+from tkinter import *
+import time
 
 user_choice =""
+
+filepath = "./Knas/böcker.csv"
+purchase_history_file = "purchase_history.txt" 
+
+number_of_articles = 0
+cost = 0
+
+File = open(filepath)
+Reader = csv.reader(File)
+Data = list(Reader)
+del(Data[0])
+Shopping_cart = []
+
+list_of_entries = []
+for x in list(range(0, len(Data))):
+    list_of_entries.append(Data[x][0])
+
+#  Tk window creation
+root = Tk()
+root.geometry("650x700")
+root.title("Book Loaning System")
+
+books = Label(text="Books", font=("Arial", 14))
+books.grid(row=0, column=0)
+
+loanlist_label = Label(text="Loanlist", font=("Arial", 14))
+loanlist_label.grid(row=0, column=2)
+
+#  listboxes
+var = StringVar(value=list_of_entries)
+listbox1 = Listbox(root, listvariable=var, bg="#f7ffde", font=("Arial", 14))
+listbox1.grid(row=1, column=0)
+
+Shopping_cart_listbox = Listbox(root, bg="#f7ffde", font=("Arial", 14))               
+Shopping_cart_listbox.grid(row=1, column=2)       
+#  Button Functions
+def update():
+    index = listbox1.curselection()[0]
+    namelabel2.config(text=Data[index][0], font=("Arial", 14))
+    typelabel2.config(text=Data[index][1], font=("Arial", 14))
+    pricelabel2.config(text=Data[index][2], font=("Arial", 14))
+
+def add_to_shopping_cart():
+    global number_of_articles, cost
+    selected_index = listbox1.curselection()
+
+    if selected_index:
+        selected_row_index = selected_index[0]
+        selected_item = list_of_entries[selected_row_index]
+        Shopping_cart_listbox.insert(END, f"{Data[selected_row_index][0]} - {Data[selected_row_index][1]} - {Data[selected_row_index][2]}")
+
+        number_of_articles += 1
+        cost += float(Data[selected_row_index][2])
+
+        numberofgrocerieslabel.config(text=f"Articles : {number_of_articles}")
+        costlabel.config(text=f"Cost : {cost:.2f}")
+
+def delete():
+    global number_of_articles, cost
+    for index in reversed(Shopping_cart_listbox.curselection()):
+        deleted_item_info = Shopping_cart_listbox.get(index)
+        deleted_price = float(deleted_item_info.split(' - ')[-1])
+
+        cost -= deleted_price
+        number_of_articles -= 1
+
+        Shopping_cart_listbox.delete(index)
+
+        numberofgrocerieslabel.config(text=f"Articles : {number_of_articles}")
+        costlabel.config(text=f"Cost : {cost:.2f}")
+
+def pay():
+    global number_of_articles, cost, Shopping_cart
+
+    if number_of_articles == 0:
+        print("Your shopping cart is empty. Please add items before paying.")
+        return
+
+    confirmation_message = f"Thank you for your purchase!\nTotal Cost: {cost:.2f}"
+
+
+    thank_you_label = Label(root, text=confirmation_message, font=("Arial", 14))
+    thank_you_label.grid(row=9, column=0, columnspan=3)
+
+
+    with open(purchase_history_file, 'a') as history_file:
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        history_file.write(f"{timestamp} - Total Cost: {cost:.2f}\n")
+        for item in Shopping_cart:
+            history_file.write(f"{item}\n")
+
+
+    Shopping_cart = []
+    Shopping_cart_listbox.delete(0, END)
+
+    root.after(5000, thank_you_label.destroy)
+
+
+#  Buttons
+button1 = Button(root, text="info", command=update)
+button1.grid(row=5, column=0)
+
+addButton = Button(root, text="add", command=add_to_shopping_cart)
+addButton.grid(row=6, column=0)
+
+deleteButton = Button(root,text="delete",command=delete)
+deleteButton.grid(row=7,column=0)
+
+paybutton = Button(root, text="pay", command=pay)
+paybutton.grid(row=8,column=0)
+
+#  Meta Labels
+namelabel = Label(root, text="Name", font=("Arial", 14)).grid(row=2, column=0, sticky="w")
+typelabel = Label(root, text="Type", font=("Arial", 14)).grid(row=3, column=0, sticky="w")
+pricelabel = Label(root, text="Price", font=("Arial", 14)).grid(row=4, column=0, sticky="w")
+
+numberofgrocerieslabel = Label(root, text=f"Articles : {number_of_articles}", font=("Arial", 14))
+numberofgrocerieslabel.grid(row=2, column=2, sticky="w")
+
+costlabel = Label(root, text=f"Cost : {cost:.2f}", font=("Arial", 14))
+costlabel.grid(row=3, column=2, sticky="w")
+
+#  info labels
+namelabel2 = Label(root, text=" - ")
+namelabel2.grid(row=2, column=1, sticky="w")
+
+typelabel2 = Label(root, text=" - ")
+typelabel2.grid(row=3, column=1, sticky="w")
+
+pricelabel2 = Label(root, text=" - ")
+pricelabel2.grid(row=4, column=1, sticky="w")
 
 #Error messages
 class AccountNotFoundError(Exception):
@@ -100,7 +232,7 @@ if __name__ == "__main__":
 
         if user_choice == 1:
             logged_in_account = login()
-            print(f"Account menu for number {logged_in_account.account_username} \n1 : Check value \n2 : Withdraw \n3 : Deposit \n4 : Transaction history \n5 : Log out")
+            print(f"Account menu for number {logged_in_account.account_username} \n1 : Check value \n2 : Withdraw \n3 : Deposit \n4 : Transaction history \n5 : loan bocks\n6 : Log out")
             user_choice = int(input("Your choice: "))
 
             if user_choice == 1:
@@ -114,6 +246,9 @@ if __name__ == "__main__":
             elif user_choice == 4:
                 print(f"Transaction history: {logged_in_account.transaction_history}")
             elif user_choice == 5:
+                root.mainloop()
+            
+            elif user_choice == 6:
                 print("Log out")
                 continue
 
