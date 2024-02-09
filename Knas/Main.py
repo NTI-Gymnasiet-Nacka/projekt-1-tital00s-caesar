@@ -22,7 +22,7 @@ for x in list(range(0, len(Data))):
 
 #  Tk window creation
 root = Tk()
-root.geometry("650x700")
+root.geometry("800x600")
 root.title("Book Loaning System")
 
 books = Label(text="Books", font=("Arial", 14))
@@ -42,8 +42,8 @@ Shopping_cart_listbox.grid(row=1, column=2)
 def update():
     index = listbox1.curselection()[0]
     namelabel2.config(text=Data[index][0], font=("Arial", 14))
-    typelabel2.config(text=Data[index][1], font=("Arial", 14))
-    pricelabel2.config(text=Data[index][2], font=("Arial", 14))
+    yearlabel2.config(text=Data[index][1], font=("Arial", 14))
+    authorlabel2.config(text=Data[index][2], font=("Arial", 14))
 
 def add_to_shopping_cart():
     global number_of_articles, cost
@@ -57,8 +57,8 @@ def add_to_shopping_cart():
         number_of_articles += 1
         cost += float(Data[selected_row_index][2])
 
-        numberofgrocerieslabel.config(text=f"Articles : {number_of_articles}")
-        costlabel.config(text=f"Cost : {cost:.2f}")
+        numberofbookslabel.config(text=f"Articles : {number_of_articles}")
+
 
 def delete():
     global number_of_articles, cost
@@ -71,8 +71,7 @@ def delete():
 
         Shopping_cart_listbox.delete(index)
 
-        numberofgrocerieslabel.config(text=f"Articles : {number_of_articles}")
-        costlabel.config(text=f"Cost : {cost:.2f}")
+        numberofbookslabel.config(text=f"Articles : {number_of_articles}")
 
 def pay():
     global number_of_articles, cost, Shopping_cart
@@ -111,29 +110,27 @@ addButton.grid(row=6, column=0)
 deleteButton = Button(root,text="delete",command=delete)
 deleteButton.grid(row=7,column=0)
 
-paybutton = Button(root, text="pay", command=pay)
-paybutton.grid(row=8,column=0)
+loanbutton = Button(root, text="pay", command=pay)
+loanbutton.grid(row=8,column=0)
 
 #  Meta Labels
-namelabel = Label(root, text="Name", font=("Arial", 14)).grid(row=2, column=0, sticky="w")
-typelabel = Label(root, text="Type", font=("Arial", 14)).grid(row=3, column=0, sticky="w")
-pricelabel = Label(root, text="Price", font=("Arial", 14)).grid(row=4, column=0, sticky="w")
+namelabel = Label(root, text="Name : ", font=("Arial", 14)).grid(row=2, column=0, sticky="w")
+yearlabel = Label(root, text="Year : ", font=("Arial", 14)).grid(row=3, column=0, sticky="w")
+authorlabel = Label(root, text="Author : ", font=("Arial", 14)).grid(row=4, column=0, sticky="w")
 
-numberofgrocerieslabel = Label(root, text=f"Articles : {number_of_articles}", font=("Arial", 14))
-numberofgrocerieslabel.grid(row=2, column=2, sticky="w")
+numberofbookslabel = Label(root, text=f"Articles : {number_of_articles}", font=("Arial", 14))
+numberofbookslabel.grid(row=2, column=2, sticky="w")
 
-costlabel = Label(root, text=f"Cost : {cost:.2f}", font=("Arial", 14))
-costlabel.grid(row=3, column=2, sticky="w")
 
 #  info labels
 namelabel2 = Label(root, text=" - ")
 namelabel2.grid(row=2, column=1, sticky="w")
 
-typelabel2 = Label(root, text=" - ")
-typelabel2.grid(row=3, column=1, sticky="w")
+yearlabel2 = Label(root, text=" - ")
+yearlabel2.grid(row=3, column=1, sticky="w")
 
-pricelabel2 = Label(root, text=" - ")
-pricelabel2.grid(row=4, column=1, sticky="w")
+authorlabel2 = Label(root, text=" - ")
+authorlabel2.grid(row=4, column=1, sticky="w")
 
 #Error messages
 class AccountNotFoundError(Exception):
