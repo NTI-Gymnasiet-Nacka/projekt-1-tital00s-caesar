@@ -73,14 +73,14 @@ def delete():
 
         numberofbookslabel.config(text=f"Articles : {number_of_articles}")
 
-def pay():
+def loan():
     global number_of_articles, cost, Shopping_cart
 
     if number_of_articles == 0:
-        print("Your shopping cart is empty. Please add items before paying.")
+        print("Your shopping cart is empty. Please add items before loaning.")
         return
 
-    confirmation_message = f"Thank you for your purchase!\nTotal Cost: {cost:.2f}"
+    confirmation_message = f"Thank you for loaning books from us!"
 
 
     thank_you_label = Label(root, text=confirmation_message, font=("Arial", 14))
@@ -89,7 +89,7 @@ def pay():
 
     with open(purchase_history_file, 'a') as history_file:
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-        history_file.write(f"{timestamp} - Total Cost: {cost:.2f}\n")
+        history_file.write(f"{timestamp} - You loaned: ")       #Lägg till här en funktion call för vad man lånade
         for item in Shopping_cart:
             history_file.write(f"{item}\n")
 
@@ -101,16 +101,16 @@ def pay():
 
 
 #  Buttons
-button1 = Button(root, text="info", command=update)
+button1 = Button(root, text="Info", command=update)
 button1.grid(row=5, column=0)
 
-addButton = Button(root, text="add", command=add_to_shopping_cart)
+addButton = Button(root, text="Add", command=add_to_shopping_cart)
 addButton.grid(row=6, column=0)
 
-deleteButton = Button(root,text="delete",command=delete)
+deleteButton = Button(root,text="Delete",command=delete)
 deleteButton.grid(row=7,column=0)
 
-loanbutton = Button(root, text="pay", command=pay)
+loanbutton = Button(root, text="Loan", command=loan)
 loanbutton.grid(row=8,column=0)
 
 #  Meta Labels
