@@ -18,119 +18,9 @@ Shopping_cart = []
 
 list_of_entries = []
 for x in list(range(0, len(Data))):
-    list_of_entries.append(Data[x][0])
-
-#  Tk window creation
-root = Tk()
-root.geometry("800x600")
-root.title("Book Loaning System")
-
-books = Label(text="Books", font=("Arial", 14))
-books.grid(row=0, column=0)
-
-loanlist_label = Label(text="Loanlist", font=("Arial", 14))
-loanlist_label.grid(row=0, column=2)
-
-#  listboxes
-var = StringVar(value=list_of_entries)
-listbox1 = Listbox(root, listvariable=var, bg="#f7ffde", font=("Arial", 14))
-listbox1.grid(row=1, column=0)
-
-Shopping_cart_listbox = Listbox(root, bg="#f7ffde", font=("Arial", 14))               
-Shopping_cart_listbox.grid(row=1, column=2)       
-#  Button Functions
-def update():
-    index = listbox1.curselection()[0]
-    namelabel2.config(text=Data[index][0], font=("Arial", 14))
-    yearlabel2.config(text=Data[index][1], font=("Arial", 14))
-    authorlabel2.config(text=Data[index][2], font=("Arial", 14))
-
-def add_to_shopping_cart():
-    global number_of_articles, cost
-    selected_index = listbox1.curselection()
-
-    if selected_index:
-        selected_row_index = selected_index[0]
-        selected_item = list_of_entries[selected_row_index]
-        Shopping_cart_listbox.insert(END, f"{Data[selected_row_index][0]} - {Data[selected_row_index][1]} - {Data[selected_row_index][2]}")
-
-        number_of_articles += 1
-        cost += float(Data[selected_row_index][2])
-
-        numberofbookslabel.config(text=f"Articles : {number_of_articles}")
+    list_of_entries.append(Data[x][0])       
 
 
-def delete():
-    global number_of_articles, cost
-    for index in reversed(Shopping_cart_listbox.curselection()):
-        deleted_item_info = Shopping_cart_listbox.get(index)
-        deleted_price = float(deleted_item_info.split(' - ')[-1])
-
-        cost -= deleted_price
-        number_of_articles -= 1
-
-        Shopping_cart_listbox.delete(index)
-
-        numberofbookslabel.config(text=f"Articles : {number_of_articles}")
-
-def loan():
-    global number_of_articles, cost, Shopping_cart
-
-    if number_of_articles == 0:
-        print("Your shopping cart is empty. Please add items before loaning.")
-        return
-
-    confirmation_message = f"Thank you for loaning books from us!"
-
-
-    thank_you_label = Label(root, text=confirmation_message, font=("Arial", 14))
-    thank_you_label.grid(row=9, column=0, columnspan=3)
-
-
-    with open(purchase_history_file, 'a') as history_file:
-        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-        history_file.write(f"{timestamp} - You loaned: ")       #Lägg till här en funktion call för vad man lånade
-        for item in Shopping_cart:
-            history_file.write(f"{item}\n")
-
-
-    Shopping_cart = []
-    Shopping_cart_listbox.delete(0, END)
-
-    root.after(5000, thank_you_label.destroy)
-
-
-#  Buttons
-button1 = Button(root, text="Info", command=update)
-button1.grid(row=5, column=0)
-
-addButton = Button(root, text="Add", command=add_to_shopping_cart)
-addButton.grid(row=6, column=0)
-
-deleteButton = Button(root,text="Delete",command=delete)
-deleteButton.grid(row=7,column=0)
-
-loanbutton = Button(root, text="Loan", command=loan)
-loanbutton.grid(row=8,column=0)
-
-#  Meta Labels
-namelabel = Label(root, text="Name : ", font=("Arial", 14)).grid(row=2, column=0, sticky="w")
-yearlabel = Label(root, text="Year : ", font=("Arial", 14)).grid(row=3, column=0, sticky="w")
-authorlabel = Label(root, text="Author : ", font=("Arial", 14)).grid(row=4, column=0, sticky="w")
-
-numberofbookslabel = Label(root, text=f"Articles : {number_of_articles}", font=("Arial", 14))
-numberofbookslabel.grid(row=2, column=2, sticky="w")
-
-
-#  info labels
-namelabel2 = Label(root, text=" - ")
-namelabel2.grid(row=2, column=1, sticky="w")
-
-yearlabel2 = Label(root, text=" - ")
-yearlabel2.grid(row=3, column=1, sticky="w")
-
-authorlabel2 = Label(root, text=" - ")
-authorlabel2.grid(row=4, column=1, sticky="w")
 
 #Error messages
 class AccountNotFoundError(Exception):
@@ -221,6 +111,121 @@ def create_account():
             print("Account created successfully!")
             return new_account
 
+#  Button Functions
+def update():
+    index = listbox1.curselection()[0]
+    namelabel2.config(text=Data[index][0], font=("Arial", 14))
+    yearlabel2.config(text=Data[index][1], font=("Arial", 14))
+    authorlabel2.config(text=Data[index][2], font=("Arial", 14))
+
+def add_to_shopping_cart():
+    global number_of_articles, cost
+    selected_index = listbox1.curselection()
+
+    if selected_index:
+        selected_row_index = selected_index[0]
+        selected_item = list_of_entries[selected_row_index]
+        Shopping_cart_listbox.insert(END, f"{Data[selected_row_index][0]} - {Data[selected_row_index][1]} - {Data[selected_row_index][2]}")
+
+        number_of_articles += 1
+        cost += float(Data[selected_row_index][2])
+
+        numberofbookslabel.config(text=f"Articles : {number_of_articles}")
+
+
+def delete():
+    global number_of_articles, cost
+    for index in reversed(Shopping_cart_listbox.curselection()):
+        deleted_item_info = Shopping_cart_listbox.get(index)
+        deleted_price = float(deleted_item_info.split(' - ')[-1])
+
+        cost -= deleted_price
+        number_of_articles -= 1
+
+        Shopping_cart_listbox.delete(index)
+
+        numberofbookslabel.config(text=f"Articles : {number_of_articles}")
+
+def loan():
+    global number_of_articles, cost, Shopping_cart
+
+    if number_of_articles == 0:
+        print("Your shopping cart is empty. Please add items before loaning.")
+        return
+
+    confirmation_message = f"Thank you for loaning books from us!"
+
+
+    thank_you_label = Label(root, text=confirmation_message, font=("Arial", 14))
+    thank_you_label.grid(row=9, column=0, columnspan=3)
+
+
+    with open(purchase_history_file, 'a') as history_file:
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        history_file.write(f"{timestamp} - You loaned: ")       #Lägg till här en funktion call för vad man lånade
+        for item in Shopping_cart:
+            history_file.write(f"{item}\n")
+
+
+    Shopping_cart = []
+    Shopping_cart_listbox.delete(0, END)
+
+    root.after(5000, thank_you_label.destroy)
+
+def start_window(update, add_to_shopping_cart, delete, loan):
+    global listbox1, Shopping_cart_listbox, root, numberofbookslabel, yearlabel2, authorlabel2, namelabel2
+    #  Tk window creation
+    root = Tk()
+    root.geometry("800x600")
+    root.title("Book Loaning System")
+
+    books = Label(text="Books", font=("Arial", 14))
+    books.grid(row=0, column=0)
+
+    loanlist_label = Label(text="Loanlist", font=("Arial", 14))
+    loanlist_label.grid(row=0, column=2)
+
+    #  listboxes
+    var = StringVar(value=list_of_entries)
+    listbox1 = Listbox(root, listvariable=var, bg="#f7ffde", font=("Arial", 14))
+    listbox1.grid(row=1, column=0)
+
+    Shopping_cart_listbox = Listbox(root, bg="#f7ffde", font=("Arial", 14))               
+    Shopping_cart_listbox.grid(row=1, column=2)
+    
+    #  Buttons
+    button1 = Button(root, text="Info", command=update)
+    button1.grid(row=5, column=0)
+
+    addButton = Button(root, text="Add", command=add_to_shopping_cart)
+    addButton.grid(row=6, column=0)
+
+    deleteButton = Button(root,text="Delete",command=delete)
+    deleteButton.grid(row=7,column=0)
+
+    loanbutton = Button(root, text="Loan", command=loan)
+    loanbutton.grid(row=8,column=0)
+
+    #  Meta Labels
+    namelabel = Label(root, text="Name : ", font=("Arial", 14)).grid(row=2, column=0, sticky="w")
+    yearlabel = Label(root, text="Year : ", font=("Arial", 14)).grid(row=3, column=0, sticky="w")
+    authorlabel = Label(root, text="Author : ", font=("Arial", 14)).grid(row=4, column=0, sticky="w")
+
+    numberofbookslabel = Label(root, text=f"Articles : {number_of_articles}", font=("Arial", 14))
+    numberofbookslabel.grid(row=2, column=2, sticky="w")
+
+
+    #  info labels
+    namelabel2 = Label(root, text=" - ")
+    namelabel2.grid(row=2, column=1, sticky="w")
+
+    yearlabel2 = Label(root, text=" - ")
+    yearlabel2.grid(row=3, column=1, sticky="w")
+
+    authorlabel2 = Label(root, text=" - ")
+    authorlabel2.grid(row=4, column=1, sticky="w")
+    
+    root.mainloop()
 
 if __name__ == "__main__":
     while user_choice != 0:
@@ -243,8 +248,8 @@ if __name__ == "__main__":
             elif user_choice == 4:
                 print(f"Transaction history: {logged_in_account.transaction_history}")
             elif user_choice == 5:
-                root.mainloop()
-            
+                start_window(update, add_to_shopping_cart, delete, loan)
+                pass
             elif user_choice == 6:
                 print("Log out")
                 continue
