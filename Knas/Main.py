@@ -128,7 +128,6 @@ def add_to_shopping_cart():
         Shopping_cart_listbox.insert(END, f"{Data[selected_row_index][0]} - {Data[selected_row_index][1]} - {Data[selected_row_index][2]}")
 
         number_of_articles += 1
-        cost += float(Data[selected_row_index][2])
 
         numberofbookslabel.config(text=f"Articles : {number_of_articles}")
 
