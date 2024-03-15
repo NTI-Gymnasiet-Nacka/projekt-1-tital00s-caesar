@@ -21,13 +21,6 @@ for x in list(range(0, len(Data))):
     list_of_entries.append(Data[x][0])       
 
 
-#Error messages
-class AccountNotFoundError(Exception):
-    pass
-
-class GeneralError(Exception):
-    pass
-
 #Parent Class
 class Account:  
     def __init__(self, account_username, owner, account_password, loans):
@@ -42,13 +35,11 @@ class Account:
 
 #Child class
 class ClientAccount(Account):
-    def __init__(self, account_username, owner, account_password, loans, transaction_history=None):
+    def __init__(self, account_username, owner, account_password, loans,): 
         super().__init__(account_username, owner, account_password, loans)
-        self.transaction_history = transaction_history or []
 
     def show_details(self):
         super().show_details()
-        print(f"Transaction History: {self.transaction_history}")
 
     def update_file(self):
         with open(filepath1, "r") as file:
@@ -228,13 +219,13 @@ def start_window(update, add_to_shopping_cart, delete, loan):
     #   Menu
 if __name__ == "__main__":
     while user_choice != 0:
-        print("Welcome to the library ! \n1 : Log in \n2 : Create account \n9 : Quit ")
+        print("\nWelcome to the library ! \n1 : Log in \n2 : Create account \n9 : Quit ")
         user_choice = int(input("Your choice: "))
 
         if user_choice == 1:
             logged_in_account = login()
             while user_choice != 0:    
-                print(f"Account menu for number {logged_in_account.account_username} \n1 : You're Information \n2 : loan books\n4 : Log out")
+                print(f"\nAccount menu for number {logged_in_account.account_username} \n1 : You're Information \n2 : loan books\n4 : Log out")
                 user_choice = int(input("Your choice: "))
                 if user_choice == 1:
                     logged_in_account.show_details()
@@ -243,10 +234,11 @@ if __name__ == "__main__":
                     pass
                 elif user_choice == 4:
                     print("Log out")
-                    continue
+                    break
 
         elif user_choice == 2:
             create_account()
 
         elif user_choice == 9:
+            print("\nOkay, Bye :(\n ")
             break
