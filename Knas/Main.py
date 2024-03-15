@@ -2,14 +2,12 @@ import csv
 from tkinter import *
 import time
 
+# Varibler and stuff
 user_choice =""
-
 filepath1 = "./Knas/böcker.csv"
 filepath2 = "./Knas/accounts.txt"
 purchase_history_file = "purchase_history.txt" 
-
 number_of_articles = 0
-
 File = open(filepath1)
 Reader = csv.reader(File)
 Data = list(Reader)
