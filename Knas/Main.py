@@ -135,7 +135,6 @@ def delete():
     global number_of_articles
     for index in reversed(Shopping_cart_listbox.curselection()):
         deleted_item_info = Shopping_cart_listbox.get(index)
-        deleted_price = float(deleted_item_info.split(' - ')[-1])
 
         
         number_of_articles -= 1
@@ -169,6 +168,7 @@ def loan():
 
     root.after(5000, thank_you_label.destroy)
 
+    # Graphic funktion
 def start_window(update, add_to_shopping_cart, delete, loan):
     global listbox1, Shopping_cart_listbox, root, numberofbookslabel, yearlabel2, authorlabel2, namelabel2
     
