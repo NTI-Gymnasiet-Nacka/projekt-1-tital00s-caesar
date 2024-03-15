@@ -4,12 +4,13 @@ import time
 
 user_choice =""
 
-filepath = "./Knas/böcker.csv"
+filepath1 = "./Knas/böcker.csv"
+filepath2 = "./Knas/accounts.txt"
 purchase_history_file = "purchase_history.txt" 
 
 number_of_articles = 0
 
-File = open(filepath)
+File = open(filepath1)
 Reader = csv.reader(File)
 Data = list(Reader)
 del(Data[0])
@@ -50,10 +51,10 @@ class ClientAccount(Account):
         print(f"Transaction History: {self.transaction_history}")
 
     def update_file(self):
-        with open("./Knas/accounts.txt", "r") as file:
+        with open(filepath1, "r") as file:
             lines = file.readlines()
 
-        with open("./Knas/accounts.txt", "w") as file:
+        with open(filepath1, "w") as file:
             for line in lines:
                 values = line.strip().split(',')
                 if values[0] == str(self.account_username):
@@ -65,7 +66,7 @@ class ClientAccount(Account):
 # Read Function
 def read_accounts():
     accounts = {}
-    with open("./Knas/accounts.txt", "r") as file:
+    with open(filepath2, "r") as file:
         for line in file:
             values = line.strip().split(',')
             if len(values) == 4:            #kollar på längden i txtfilen så att allt finns med
@@ -103,7 +104,7 @@ def create_account():
             new_account = ClientAccount(new_account_username, new_owner, new_password, new_loans)
             accounts[new_account_username] = new_account
 
-            with open("./Knas/accounts.txt", "a") as file:
+            with open(filepath2, "a") as file:
                 file.write(f"{new_account_username},{new_password},{new_owner},{new_loans}\{new_loans}\n")
 
             print("Account created successfully!")
@@ -224,6 +225,7 @@ def start_window(update, add_to_shopping_cart, delete, loan):
     
     root.mainloop()
 
+    #   Menu
 if __name__ == "__main__":
     while user_choice != 0:
         print("Welcome to the library ! \n1 : Log in \n2 : Create account \n9 : Quit ")
@@ -231,17 +233,17 @@ if __name__ == "__main__":
 
         if user_choice == 1:
             logged_in_account = login()
-            print(f"Account menu for number {logged_in_account.account_username} \n1 : You're Information \n2 : loan books\n4 : Log out")
-            user_choice = int(input("Your choice: "))
-
-            if user_choice == 1:
-                logged_in_account.show_details()
-            elif user_choice == 2 :
-                start_window(update, add_to_shopping_cart, delete, loan)
-                pass
-            elif user_choice == 4:
-                print("Log out")
-                continue
+            while user_choice != 0:    
+                print(f"Account menu for number {logged_in_account.account_username} \n1 : You're Information \n2 : loan books\n4 : Log out")
+                user_choice = int(input("Your choice: "))
+                if user_choice == 1:
+                    logged_in_account.show_details()
+                elif user_choice == 2 :
+                    start_window(update, add_to_shopping_cart, delete, loan)
+                    pass
+                elif user_choice == 4:
+                    print("Log out")
+                    continue
 
         elif user_choice == 2:
             create_account()
