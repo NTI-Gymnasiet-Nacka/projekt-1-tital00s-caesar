@@ -8,7 +8,6 @@ filepath = "./Knas/böcker.csv"
 purchase_history_file = "purchase_history.txt" 
 
 number_of_articles = 0
-cost = 0
 
 File = open(filepath)
 Reader = csv.reader(File)
@@ -19,7 +18,6 @@ Shopping_cart = []
 list_of_entries = []
 for x in list(range(0, len(Data))):
     list_of_entries.append(Data[x][0])       
-
 
 
 #Error messages
@@ -119,7 +117,7 @@ def update():
     authorlabel2.config(text=Data[index][2], font=("Arial", 14))
 
 def add_to_shopping_cart():
-    global number_of_articles, cost
+    global number_of_articles
     selected_index = listbox1.curselection()
 
     if selected_index:
@@ -133,12 +131,12 @@ def add_to_shopping_cart():
 
 
 def delete():
-    global number_of_articles, cost
+    global number_of_articles
     for index in reversed(Shopping_cart_listbox.curselection()):
         deleted_item_info = Shopping_cart_listbox.get(index)
         deleted_price = float(deleted_item_info.split(' - ')[-1])
 
-        cost -= deleted_price
+        
         number_of_articles -= 1
 
         Shopping_cart_listbox.delete(index)
@@ -146,7 +144,7 @@ def delete():
         numberofbookslabel.config(text=f"Articles : {number_of_articles}")
 
 def loan():
-    global number_of_articles, cost, Shopping_cart
+    global number_of_articles, Shopping_cart
 
     if number_of_articles == 0:
         print("Your shopping cart is empty. Please add items before loaning.")
@@ -165,7 +163,6 @@ def loan():
         for item in Shopping_cart:
             history_file.write(f"{item}\n")
 
-
     Shopping_cart = []
     Shopping_cart_listbox.delete(0, END)
 
@@ -173,6 +170,7 @@ def loan():
 
 def start_window(update, add_to_shopping_cart, delete, loan):
     global listbox1, Shopping_cart_listbox, root, numberofbookslabel, yearlabel2, authorlabel2, namelabel2
+    
     #  Tk window creation
     root = Tk()
     root.geometry("800x600")
@@ -233,23 +231,15 @@ if __name__ == "__main__":
 
         if user_choice == 1:
             logged_in_account = login()
-            print(f"Account menu for number {logged_in_account.account_username} \n1 : Check value \n2 : Withdraw \n3 : Deposit \n4 : Transaction history \n5 : loan bocks\n6 : Log out")
+            print(f"Account menu for number {logged_in_account.account_username} \n1 : You're Information \n2 : loan books\n4 : Log out")
             user_choice = int(input("Your choice: "))
 
             if user_choice == 1:
                 logged_in_account.show_details()
-            elif user_choice == 2:
-                withdraw_amount = float(input("Enter the amount to withdraw: "))
-                logged_in_account.withdraw(withdraw_amount)
-            elif user_choice == 3:
-                deposit_amount = float(input("Enter the amount to deposit: "))
-                logged_in_account.deposit(deposit_amount)
-            elif user_choice == 4:
-                print(f"Transaction history: {logged_in_account.transaction_history}")
-            elif user_choice == 5:
+            elif user_choice == 2 :
                 start_window(update, add_to_shopping_cart, delete, loan)
                 pass
-            elif user_choice == 6:
+            elif user_choice == 4:
                 print("Log out")
                 continue
 
